@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="description" content="Track your workouts offline with this PWA">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>FitTrack - Workout Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <h1>FitTrack</h1>
+      <button id="install-btn" class="btn-icon" hidden aria-label="Install app">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </button>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="workout">Workout</button>
+      <button class="tab-btn" data-tab="history">History</button>
+      <button class="tab-btn" data-tab="stats">Stats</button>
+    </nav>
+
+    <!-- Workout Tab -->
+    <main id="tab-workout" class="tab-content active">
+      <div id="no-active-workout" class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6.5 6.5h11M4 10h16M6.5 17.5h11M4 14h16"/><circle cx="4" cy="6.5" r="2"/><circle cx="20" cy="6.5" r="2"/><circle cx="4" cy="17.5" r="2"/><circle cx="20" cy="17.5" r="2"/></svg>
+        <p>No active workout</p>
+        <button id="start-workout-btn" class="btn-primary">Start Workout</button>
+      </div>
+
+      <div id="active-workout" hidden>
+        <div class="workout-header">
+          <input type="text" id="workout-name" class="workout-name-input" placeholder="Workout Name" value="Workout">
+          <div class="workout-timer" id="workout-timer">00:00</div>
+        </div>
+
+        <div id="exercises-list"></div>
+
+        <button id="add-exercise-btn" class="btn-secondary">+ Add Exercise</button>
+
+        <div class="workout-actions">
+          <button id="finish-workout-btn" class="btn-primary">Finish Workout</button>
+          <button id="cancel-workout-btn" class="btn-danger">Cancel</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- History Tab -->
+    <main id="tab-history" class="tab-content" hidden>
+      <div id="history-list"></div>
+      <div id="no-history" class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <p>No workouts yet</p>
+      </div>
+    </main>
+
+    <!-- Stats Tab -->
+    <main id="tab-stats" class="tab-content" hidden>
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">Total Workouts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-week">0</div>
+          <div class="stat-label">This Week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-volume">0</div>
+          <div class="stat-label">Total Volume (kg)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-streak">0</div>
+          <div class="stat-label">Day Streak</div>
+        </div>
+      </div>
+      <h3 class="section-title">Most Used Exercises</h3>
+      <div id="top-exercises" class="top-exercises"></div>
+    </main>
+
+    <!-- Exercise Picker Modal -->
+    <div id="exercise-modal" class="modal" hidden>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add Exercise</h2>
+          <button class="btn-icon modal-close" aria-label="Close">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <input type="text" id="exercise-search" class="search-input" placeholder="Search or add custom exercise...">
+        <div id="exercise-options" class="exercise-options"></div>
+        <button id="add-custom-exercise-btn" class="btn-secondary" hidden>Add as Custom Exercise</button>
+      </div>
+    </div>
+
+    <!-- Workout Detail Modal -->
+    <div id="detail-modal" class="modal" hidden>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="detail-title">Workout</h2>
+          <button class="btn-icon modal-close" aria-label="Close">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div id="detail-body"></div>
+        <button id="delete-workout-btn" class="btn-danger" style="margin-top:1rem;width:100%">Delete Workout</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
