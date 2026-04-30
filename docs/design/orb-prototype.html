@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+  Source-of-truth visual reference for the MemoryOS native UI.
+  This HTML is the prototype the React Native app's theme + Orb component
+  reproduce. If you change tokens/animations in code, mirror them here so
+  the prototype keeps working as a quick design check.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#13110f" />
+<title>MemoryOS — Your private memory, on-device</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:        #13110f;
+    --bg-2:     #1b1816;
+    --ink:        #f4ece1;
+    --ink-dim:    #b8ad9e;
+    --ink-faint:  #756c61;
+    --line:       #2a2520;
+    --glow:        #f5b656;
+    --glow-soft:   #f5b65622;
+    --glow-faint:  #f5b6560f;
+    --accent:      #e0c9a6;
+    --danger:      #d97757;
+    --safe:        #84a98c;
+    --radius: 18px;
+    --radius-lg: 28px;
+  }
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
+  body{font-family:'Geist',system-ui,sans-serif;background:radial-gradient(1200px 700px at 50% -10%,#1f1a14 0%,transparent 60%),var(--bg);color:var(--ink);min-height:100dvh}
+  .app{max-width:880px;margin:0 auto;padding:28px 22px 140px}
+  .greeting{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(28px,6vw,44px);line-height:1.15}
+  .greeting em{font-style:italic;color:var(--accent)}
+  .orb{width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffd89b 0%,#f5b656 35%,#b87a2e 75%,#6b3f10 100%);box-shadow:0 0 60px -10px var(--glow),inset 0 -10px 30px rgba(0,0,0,.35),inset 0 8px 20px rgba(255,255,255,.18)}
+</style>
+</head>
+<body>
+  <div class="app">
+    <h1 class="greeting">Good evening.<br/><em>What do you want to remember?</em></h1>
+    <div style="display:flex;justify-content:center;margin:32px 0">
+      <div class="orb"></div>
+    </div>
+    <p style="text-align:center;color:var(--ink-dim)">See <code>src/components/Orb.tsx</code> for the React Native port.</p>
+  </div>
+</body>
+</html>

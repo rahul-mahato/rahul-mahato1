@@ -28,21 +28,31 @@ First launch downloads on-device models into `models/` (gitignored).
 
 ```
 src/
-  app/         expo-router routes (chat, ask, timeline, insights, settings)
-  components/  presentational React Native components
-  db/          WatermelonDB schema, models, service layer
-  vector/      LanceDB adapter + embedding queue
-  ai/          embedder, inference, whisper, RAG, prompts
-  crypto/      AES-GCM envelope + Keychain/Keystore DEK
-  sync/        privacy audit log, CRDT (Phase 3)
-  hooks/       useMemories, useAskPastSelf
+  app/
+    _layout.tsx       fonts + splash + TTL sweep + stack
+    (drawer)/         4-screen drawer:
+      index.tsx       · Ask  — orb-centric, no search box, ask-only
+      memories.tsx    · Memories — chronological, tap to edit
+      insights.tsx    · Insights — weekly synthesis
+      settings.tsx    · Settings — Memory TTL + privacy audit log
+    memory/[id].tsx   modal editor for update / delete
+  components/         Orb, AnswerSurface, MemoryRow, InsightCard, …
+  theme/              tokens, font loader, typed Text
+  db/                 WatermelonDB schema + models + memory.service
+  vector/             LanceDB adapter + embedding queue
+  ai/                 embedder, inference, whisper, RAG, prompts
+  crypto/             AES-256-GCM + Keychain/Keystore DEK
+  sync/               privacy audit log, CRDT (Phase 3)
+  settings/           TTL preference + sweeper
+  hooks/              useMemories, useAskPastSelf, useUpdateMemory
 docs/
-  ARCHITECTURE.md   how it fits together
-  PRIVACY.md        data model + promises (source of truth)
-  ROADMAP.md        phases, acceptance criteria
-  spec/             original product spec
+  ARCHITECTURE.md     how it fits together
+  PRIVACY.md          data model + promises (source of truth)
+  ROADMAP.md          phases, acceptance criteria
+  design/             visual prototype (HTML mirror of theme)
+  spec/               original product spec
 .claude/
-  skills/      MemoryOS-specific Claude skills (read CLAUDE.md first)
+  skills/             MemoryOS-specific Claude skills (read CLAUDE.md first)
 ```
 
 ## Working with Claude
@@ -54,6 +64,7 @@ reading `CLAUDE.md`. For common tasks, invoke the matching skill:
 - `update-schema` — DB schema changes (append-only!)
 - `privacy-audit` — anything touching crypto, sync, or network
 - `add-ai-pipeline` — new on-device models or RAG variants
+- `change-settings` — adding or modifying user preferences (TTL, etc.)
 - `memoryos-architecture` — orientation tour
 
 ## Status

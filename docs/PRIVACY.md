@@ -65,6 +65,27 @@ Both stay on-device. Audio buffers live only as long as transcription takes.
 - "Anonymous" usage analytics. There's no anonymous when the events
   reflect the user's writing cadence.
 
+## Retention
+
+Memory TTL is user-configurable in Settings. Options:
+
+| TTL      | Behavior                                                    |
+|----------|-------------------------------------------------------------|
+| Forever  | Default. Nothing is auto-deleted.                           |
+| 7 days   | Memories older than 7 days are deleted on next launch.      |
+| 30 days  | …                                                           |
+| 90 days  | …                                                           |
+| 1 year   | …                                                           |
+
+When the TTL changes, the sweeper runs immediately. Deletes are real:
+the WatermelonDB row is destroyed and its vector is removed from LanceDB.
+There is no "trash" bucket and no soft-delete. The user asked for
+forgetting, so the app forgets.
+
+The TTL preference itself is stored in AsyncStorage under
+`memoryos.settings.ttl`. It is not user content; it does not require
+encryption. The setting key never leaves the device.
+
 ## Wipe
 
 `crypto/keystore.ts:wipe()` deletes the DEK. All on-disk ciphertext becomes

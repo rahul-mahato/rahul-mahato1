@@ -30,18 +30,28 @@ Everything semantic happens on-device. The server (if any) only ever sees cipher
 
 ```
 src/
-  app/              # expo-router routes (chat, timeline, insights, settings)
-  components/       # presentational React Native components
-  db/               # WatermelonDB schema + models (Memory, Embedding, Theme)
-  vector/           # LanceDB adapter + embedder pipeline
-  ai/               # Inference, RAG, synthesis, whisper
-  crypto/           # AES-GCM + hardware key management
-  sync/             # CRDT + privacy audit log
-  hooks/            # React hooks (useMemories, useQuery, useSynthesis)
-  utils/            # logger, time, ids
-docs/               # ARCHITECTURE, PRIVACY, ROADMAP, spec/
-tests/              # jest tests, mirrors src/
-.claude/skills/     # MemoryOS-specific Claude skills (read these!)
+  app/
+    _layout.tsx       # root: fonts, splash, TTL sweep, stack with drawer + modal
+    (drawer)/         # 4-screen drawer: Ask, Memories, Insights, Settings
+      _layout.tsx
+      index.tsx       # Ask screen (orb is the focal point)
+      memories.tsx    # Tap-to-edit list + quick capture
+      insights.tsx    # Weekly synthesis cards
+      settings.tsx    # Memory TTL picker + privacy audit log
+    memory/[id].tsx   # Modal editor (update / delete)
+  components/         # Orb, AnswerSurface, MemoryRow, InsightCard, …
+  theme/              # tokens.ts, fonts.ts, text.tsx (typed Text component)
+  db/                 # WatermelonDB schema + models + memory.service
+  vector/             # LanceDB adapter + embedder pipeline
+  ai/                 # Inference, RAG, synthesis, whisper, prompts
+  crypto/             # AES-GCM + hardware key management
+  sync/               # CRDT + privacy audit log
+  settings/           # TTL store + sweeper (settings drive deletes)
+  hooks/              # useMemories, useAskPastSelf, useUpdateMemory
+  utils/              # logger, ids
+docs/                 # ARCHITECTURE, PRIVACY, ROADMAP, design/, spec/
+tests/                # jest tests, mirrors src/
+.claude/skills/       # MemoryOS-specific Claude skills (read these!)
 ```
 
 ## 4. Non-negotiable invariants
@@ -63,6 +73,13 @@ These are the rails. Breaking any of them is a P0 bug.
    See `src/db/schema.ts`.
 7. **The privacy audit log records every outbound network request.** If you add a
    `fetch` or websocket, you must log it via `src/sync/privacyLog.ts`.
+8. **TTL deletions are real.** When the user sets a memory TTL, the sweeper
+   actually removes rows + their vectors. No soft-delete, no "archived"
+   bucket — the user asked for forgetting, so forget. Sweep runs on app
+   start and on TTL change. See `src/settings/sweeper.ts`.
+9. **No search box across memories.** Retrieval happens via natural-language
+   "Ask your past self" only. Don't add a string-match search to the
+   Memories screen — that erodes the product idea.
 
 ## 5. Workflows — pick the right skill
 
@@ -72,6 +89,7 @@ For common tasks, invoke the matching skill in `.claude/skills/`:
 - **Changing the DB schema** → `.claude/skills/update-schema/SKILL.md`
 - **Touching crypto or sync** → `.claude/skills/privacy-audit/SKILL.md`
 - **Adding an AI model or pipeline** → `.claude/skills/add-ai-pipeline/SKILL.md`
+- **Adding/changing a setting (TTL etc.)** → `.claude/skills/change-settings/SKILL.md`
 - **Architecture orientation** → `.claude/skills/memoryos-architecture/SKILL.md`
 
 If your task doesn't fit a skill, follow §6.

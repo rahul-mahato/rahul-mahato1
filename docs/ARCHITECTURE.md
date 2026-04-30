@@ -12,8 +12,28 @@
 ## Components
 
 ### App layer (`src/app/`)
-expo-router routes. Screens are thin — they compose components and hooks.
-Screens never reach into the DB or vector store directly.
+expo-router routes. The root stack mounts a 4-screen drawer
+(`(drawer)/index.tsx` Ask, `memories.tsx`, `insights.tsx`, `settings.tsx`)
+plus a modal editor route at `memory/[id].tsx`. Screens are thin — they
+compose components and hooks. Screens never reach into the DB or vector
+store directly.
+
+The Ask screen is the focal point: an animated amber Orb (see
+`src/components/Orb.tsx`, mirrored in `docs/design/orb-prototype.html`)
+with a typed prompt fallback. There is **no search bar** — retrieval is
+ask-only by design.
+
+### Theme (`src/theme/`)
+- `tokens.ts` — colors, spacing, fonts, motion durations.
+- `fonts.ts` — `useAppFonts()` (Fraunces + Geist + Geist Mono via
+  `@expo-google-fonts/*`).
+- `text.tsx` — typed `<Text variant>` so designers and code agree on
+  what `display`, `title`, `serifBody`, `mono` mean.
+
+### Settings (`src/settings/`)
+- `ttl.ts` — TTL preference (AsyncStorage). Plain helpers; not user content.
+- `sweeper.ts` — `runTtlSweep()` deletes memories older than the cutoff,
+  wired into root layout post-fonts and on TTL change in Settings.
 
 ### Components (`src/components/`)
 Presentational + light state. They consume hooks. No I/O, no encryption.

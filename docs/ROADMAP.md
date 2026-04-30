@@ -14,6 +14,10 @@ back. No AI yet beyond stub embeddings.
 - [x] AES-GCM envelope contract (native binding pending)
 - [x] Chat input → encrypted persistence path
 - [x] Privacy audit log table + UI surface
+- [x] 4-screen drawer (Ask / Memories / Insights / Settings) + theme system
+- [x] Orb component (breathing halo, listening waves, thinking spinner)
+- [x] Tap-to-edit memory editor (`memory/[id].tsx`)
+- [x] Memory TTL setting + sweeper wired to app start
 - [ ] Native AES-GCM binding (replaces stub in `crypto/encryption.ts`)
 - [ ] Real LanceDB binding (replaces in-memory map in `vector/lancedb.ts`)
 - [ ] First-launch model download + manifest verification
