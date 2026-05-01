@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { router } from 'expo-router';
@@ -10,6 +10,9 @@ import { Orb, type OrbState } from '@components/Orb';
 import { PrivacyPill } from '@components/PrivacyPill';
 import { Chip } from '@components/Chip';
 import { AnswerSurface } from '@components/AnswerSurface';
+import { SynthesisPreview } from '@components/SynthesisPreview';
+import { PrivacyStrip } from '@components/PrivacyStrip';
+import { CaptureToast } from '@components/CaptureToast';
 import { askPastSelf } from '@ai/rag';
 import { memoryService } from '@db/memory.service';
 import type { RagContext } from '@ai/prompts';
@@ -22,11 +25,28 @@ function greeting(): string {
   return 'Good evening.';
 }
 
+/**
+ * Status-text matrix from UX_RATIONALE §3. Strings are intentionally the
+ * exact wording in the rationale — designers need the same words across
+ * surfaces, and "on-device" needs to appear precisely when the user might
+ * worry their thoughts left the phone.
+ */
+const STATUS: Record<OrbState, string> = {
+  idle:
+    Platform.OS === 'web'
+      ? 'Tap the orb, or press Space to speak.'
+      : 'Tap the orb to speak.',
+  listening: 'Listening… say anything, or tap to stop.',
+  thinking: 'Thinking on‑device… searching your memories.',
+  answered: 'Tap the orb to ask another question.',
+};
+
 export default function AskScreen() {
   const nav = useNavigation();
   const [orbState, setOrbState] = useState<OrbState>('idle');
   const [input, setInput] = useState('');
   const [answer, setAnswer] = useState<{ q: string; a: string; ctx: RagContext[] } | null>(null);
+  const [captureToast, setCaptureToast] = useState(false);
 
   const submitQuestion = useCallback(async (q: string) => {
     if (!q.trim()) return;
@@ -36,18 +56,21 @@ export default function AskScreen() {
       setAnswer({ q: q.trim(), a: r.answer, ctx: r.contexts });
       setOrbState('answered');
     } catch (err) {
-      setAnswer({ q: q.trim(), a: `Couldn't reach your memories: ${(err as Error).message}`, ctx: [] });
+      setAnswer({ q: q.trim(), a: `Couldn’t reach your memories: ${(err as Error).message}`, ctx: [] });
       setOrbState('idle');
     }
   }, []);
 
   const submitInput = useCallback(async () => {
     if (!input.trim()) return;
-    const isQuestion = /\?$/.test(input.trim()) || /^(what|why|when|how|where|did|do|was|is|am)\b/i.test(input.trim());
-    if (isQuestion) {
+    const looksLikeQuestion =
+      /\?$/.test(input.trim()) ||
+      /^(what|why|when|how|where|did|do|was|is|am)\b/i.test(input.trim());
+    if (looksLikeQuestion) {
       await submitQuestion(input);
     } else {
       await memoryService.create({ text: input.trim(), kind: 'text' });
+      setCaptureToast(true);
     }
     setInput('');
   }, [input, submitQuestion]);
@@ -66,19 +89,18 @@ export default function AskScreen() {
     }
   }, [orbState, submitQuestion]);
 
-  const orbHelpText =
-    orbState === 'listening' ? 'Listening… tap to stop.' :
-    orbState === 'thinking' ? 'Thinking on‑device…' :
-    orbState === 'answered' ? 'Tap to ask another.' :
-    'Tap the orb to speak.';
-
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Zone 1 — Privacy proof, always visible */}
         <View style={styles.topbar}>
           <Pressable
             onPress={() => nav.dispatch(DrawerActions.openDrawer())}
             accessibilityLabel="Open menu"
+            accessibilityRole="button"
             style={styles.menuBtn}
           >
             <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={colors.ink} strokeWidth={1.6}>
@@ -88,18 +110,31 @@ export default function AskScreen() {
           <PrivacyPill />
         </View>
 
-        <Text variant="displayLg" style={styles.greeting}>
+        {/* Zone 2 — Greeting + intent prompt */}
+        <Text variant="displayLg" accessibilityRole="header" style={styles.greeting}>
           {greeting()}{'\n'}
           <Text variant="displayLg" italic>What do you want to remember?</Text>
         </Text>
         <Text variant="bodyDim" style={styles.sub}>Speak, type, or ask your past self anything.</Text>
 
-        <View style={styles.orbStage}>
+        {/* Zone 3 — The orb (focal point) */}
+        <View
+          style={styles.orbStage}
+          accessibilityLabel="Voice input"
+          accessibilityRole="header"
+        >
           <Orb state={orbState} onPress={onOrbPress} />
-          <Text variant="bodyDim" style={styles.orbHelp} accessibilityLiveRegion="polite">{orbHelpText}</Text>
+          <Text
+            variant="bodyDim"
+            style={styles.orbHelp}
+            accessibilityLiveRegion="polite"
+            accessibilityRole="text"
+          >
+            {STATUS[orbState]}
+          </Text>
         </View>
 
-        <View style={styles.actions}>
+        <View style={styles.actions} accessibilityRole="toolbar" accessibilityLabel="Quick actions">
           <Chip
             label="Ask your past self"
             icon={
@@ -130,6 +165,7 @@ export default function AskScreen() {
           />
         </View>
 
+        {/* Always-available alt path */}
         <View style={styles.typeRow}>
           <TextInput
             value={input}
@@ -139,9 +175,11 @@ export default function AskScreen() {
             style={styles.input}
             returnKeyType="send"
             onSubmitEditing={submitInput}
+            accessibilityLabel="Type a memory or a question"
           />
           <Pressable
             accessibilityLabel="Submit"
+            accessibilityRole="button"
             onPress={submitInput}
             disabled={!input.trim()}
             style={[styles.send, !input.trim() && { opacity: 0.4 }]}
@@ -150,7 +188,15 @@ export default function AskScreen() {
           </Pressable>
         </View>
 
+        <CaptureToast visible={captureToast} onHidden={() => setCaptureToast(false)} />
+
         {answer && <AnswerSurface question={answer.q} answer={answer.a} contexts={answer.ctx} />}
+
+        {/* Zone 4 — Proactive synthesis (3-card ceiling) */}
+        <SynthesisPreview />
+
+        {/* Privacy moat made tangible */}
+        <PrivacyStrip />
       </ScrollView>
     </SafeAreaView>
   );
@@ -166,8 +212,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl,
   },
   menuBtn: {
-    width: 40,
-    height: 40,
+    width: 48,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,
@@ -178,7 +224,7 @@ const styles = StyleSheet.create({
   greeting: { marginBottom: 6 },
   sub: { marginBottom: spacing.xl, color: colors.inkFaint },
   orbStage: { alignItems: 'center', marginVertical: spacing.lg },
-  orbHelp: { marginTop: spacing.lg, color: colors.inkDim, textAlign: 'center' },
+  orbHelp: { marginTop: spacing.lg, color: colors.inkDim, textAlign: 'center', minHeight: 24 },
   actions: {
     flexDirection: 'row',
     flexWrap: 'wrap',

@@ -1,7 +1,17 @@
 import { Text as RNText, type TextProps, type TextStyle, StyleSheet } from 'react-native';
 import { colors, fonts } from './tokens';
 
-type Variant = 'displayLg' | 'display' | 'title' | 'body' | 'bodyDim' | 'meta' | 'mono' | 'serifBody';
+type Variant =
+  | 'displayLg'
+  | 'display'
+  | 'title'
+  | 'body'
+  | 'bodyDim'
+  | 'meta'
+  | 'mono'
+  | 'serifBody'
+  | 'serifItalic'
+  | 'serifQuote';
 
 interface Props extends TextProps {
   variant?: Variant;
@@ -62,6 +72,18 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 24,
     color: colors.ink,
+  },
+  serifItalic: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 22,
+    lineHeight: 30,
+    color: colors.ink,
+  },
+  serifQuote: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 14,
+    lineHeight: 22,
+    color: colors.inkDim,
   },
   italic: {
     fontFamily: fonts.serifItalic,

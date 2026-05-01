@@ -17,7 +17,11 @@ export function Chip({ label, onPress, icon, accessibilityLabel }: Props) {
       onPress={onPress}
       style={({ pressed }) => [styles.chip, pressed && styles.pressed]}
     >
-      {icon ? <View style={styles.icon}>{icon}</View> : null}
+      {icon ? (
+        <View style={styles.icon} importantForAccessibility="no" accessibilityElementsHidden>
+          {icon}
+        </View>
+      ) : null}
       <Text variant="bodyDim" style={styles.label}>{label}</Text>
     </Pressable>
   );
@@ -28,7 +32,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    minHeight: 44,
+    minHeight: 48,
     paddingHorizontal: 18,
     backgroundColor: colors.bg2,
     borderColor: colors.line,

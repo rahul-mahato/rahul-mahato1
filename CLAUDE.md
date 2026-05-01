@@ -133,4 +133,7 @@ sync) until Phase 1 acceptance criteria are met.
 - Architecture questions → `docs/ARCHITECTURE.md`
 - Privacy questions → `docs/PRIVACY.md` (this is the source of truth, not your
   intuition)
+- **UI/UX questions → `docs/design/UX_RATIONALE.md`** (canonical UX brief —
+  read before changing anything visual or interactive). The HTML prototype
+  in `docs/design/orb-prototype.html` is the visual reference.
 - If a skill exists for the task, use it. If not, propose one in your PR.

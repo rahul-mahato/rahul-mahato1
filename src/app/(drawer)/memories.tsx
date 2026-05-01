@@ -32,13 +32,14 @@ export default function MemoriesScreen() {
         <Pressable
           onPress={() => nav.dispatch(DrawerActions.openDrawer())}
           accessibilityLabel="Open menu"
+          accessibilityRole="button"
           style={styles.menuBtn}
         >
           <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={colors.ink} strokeWidth={1.6}>
             <Path d="M4 7h16M4 12h16M4 17h16" />
           </Svg>
         </Pressable>
-        <Text variant="display" style={styles.title}>Memories</Text>
+        <Text variant="display" accessibilityRole="header" style={styles.title}>Memories</Text>
       </View>
 
       <Text variant="bodyDim" style={styles.sub}>
@@ -94,8 +95,8 @@ const styles = StyleSheet.create({
     paddingTop: spacing.md,
   },
   menuBtn: {
-    width: 40,
-    height: 40,
+    width: 48,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
     borderColor: colors.line,
   },
   saveBtn: {
-    minHeight: 44,
+    minHeight: 48,
     paddingHorizontal: 18,
     backgroundColor: colors.ink,
     borderRadius: radius.md,

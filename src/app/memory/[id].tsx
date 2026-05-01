@@ -16,6 +16,7 @@ export default function MemoryEditScreen() {
       <View style={styles.header}>
         <Pressable
           accessibilityLabel="Close"
+          accessibilityRole="button"
           onPress={() => router.back()}
           style={styles.closeBtn}
         >
@@ -23,7 +24,7 @@ export default function MemoryEditScreen() {
             <Path d="M6 6l12 12M18 6L6 18" />
           </Svg>
         </Pressable>
-        <Text variant="title">Edit memory</Text>
+        <Text variant="title" accessibilityRole="header">Edit memory</Text>
       </View>
 
       {error ? (
@@ -64,8 +65,8 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.sm,
   },
   closeBtn: {
-    width: 40,
-    height: 40,
+    width: 48,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,

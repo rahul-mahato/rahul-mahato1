@@ -55,13 +55,14 @@ export default function SettingsScreen() {
           <Pressable
             onPress={() => nav.dispatch(DrawerActions.openDrawer())}
             accessibilityLabel="Open menu"
+            accessibilityRole="button"
             style={styles.menuBtn}
           >
             <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={colors.ink} strokeWidth={1.6}>
               <Path d="M4 7h16M4 12h16M4 17h16" />
             </Svg>
           </Pressable>
-          <Text variant="display" style={styles.title}>Privacy &amp; settings</Text>
+          <Text variant="display" accessibilityRole="header" style={styles.title}>Privacy &amp; settings</Text>
         </View>
 
         <Text variant="bodyDim" style={styles.intro}>
@@ -71,7 +72,9 @@ export default function SettingsScreen() {
 
         {/* TTL section */}
         <Text variant="mono" style={styles.sectionMono}>MEMORY TTL</Text>
-        <Text variant="title" style={styles.sectionTitle}>Auto-delete old memories</Text>
+        <Text variant="title" accessibilityRole="header" style={styles.sectionTitle}>
+          Auto-delete old memories
+        </Text>
         <Text variant="bodyDim" style={styles.sectionSub}>
           When a memory passes this age, it is deleted from the database and the
           vector index. The deletion is irreversible.
@@ -112,7 +115,7 @@ export default function SettingsScreen() {
 
         {/* Privacy log */}
         <Text variant="mono" style={styles.sectionMono}>OUTBOUND CALLS</Text>
-        <Text variant="title" style={styles.sectionTitle}>
+        <Text variant="title" accessibilityRole="header" style={styles.sectionTitle}>
           {entries.length === 0 ? '0 outbound requests recorded' : `${entries.length} recorded`}
         </Text>
         <Text variant="bodyDim" style={styles.sectionSub}>
@@ -149,8 +152,8 @@ const styles = StyleSheet.create({
   scroll: { padding: spacing.xl, paddingBottom: 80 },
   header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginBottom: spacing.lg },
   menuBtn: {
-    width: 40,
-    height: 40,
+    width: 48,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,
@@ -168,6 +171,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
+    minHeight: 48,
     paddingVertical: 14,
     paddingHorizontal: 16,
     backgroundColor: colors.bg2,

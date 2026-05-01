@@ -23,6 +23,12 @@ The Ask screen is the focal point: an animated amber Orb (see
 with a typed prompt fallback. There is **no search bar** — retrieval is
 ask-only by design.
 
+> **UX brief:** the canonical rationale for every UI decision (information
+> architecture, motion, accessibility, type system, what's deliberately
+> *missing*) lives in `docs/design/UX_RATIONALE.md`. Read it before
+> touching anything user-visible — implementation details that match the
+> prototype but disagree with the rationale are bugs.
+
 ### Theme (`src/theme/`)
 - `tokens.ts` — colors, spacing, fonts, motion durations.
 - `fonts.ts` — `useAppFonts()` (Fraunces + Geist + Geist Mono via

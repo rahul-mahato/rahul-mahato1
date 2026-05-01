@@ -5,31 +5,7 @@ import Svg, { Path } from 'react-native-svg';
 import { Text } from '@/theme/text';
 import { colors, spacing } from '@/theme/tokens';
 import { InsightCard } from '@components/InsightCard';
-
-/**
- * Phase 3 will populate these from the synthesis worker. For now they're
- * shaped placeholders so the screen and visual pattern are real.
- */
-const SAMPLE_INSIGHTS = [
-  {
-    kind: 'theme' as const,
-    body: 'You\'ve mentioned sleep quality in 6 entries this week — usually after late gym sessions.',
-    emphasis: 'sleep quality',
-    meta: 'Tap to see all 6 →',
-  },
-  {
-    kind: 'mood' as const,
-    body: 'Tone of your Tuesday entries is steadily more optimistic than three weeks ago.',
-    emphasis: 'more optimistic',
-    meta: 'Compare timelines →',
-  },
-  {
-    kind: 'thread' as const,
-    body: 'A question you asked yourself on April 12 is still unresolved.',
-    emphasis: 'unresolved',
-    meta: 'Revisit →',
-  },
-];
+import { INSIGHTS } from '@/data/insightsFixture';
 
 export default function InsightsScreen() {
   const nav = useNavigation();
@@ -41,22 +17,23 @@ export default function InsightsScreen() {
           <Pressable
             onPress={() => nav.dispatch(DrawerActions.openDrawer())}
             accessibilityLabel="Open menu"
+            accessibilityRole="button"
             style={styles.menuBtn}
           >
             <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={colors.ink} strokeWidth={1.6}>
               <Path d="M4 7h16M4 12h16M4 17h16" />
             </Svg>
           </Pressable>
-          <Text variant="display" style={styles.title}>This week</Text>
+          <Text variant="display" accessibilityRole="header" style={styles.title}>This week</Text>
         </View>
 
         <View style={styles.sectionLabel}>
-          <Text variant="title">Synthesis</Text>
-          <Text variant="mono">{SAMPLE_INSIGHTS.length} PATTERNS NOTICED</Text>
+          <Text variant="title" accessibilityRole="header">Synthesis</Text>
+          <Text variant="mono">{INSIGHTS.length} PATTERNS NOTICED</Text>
         </View>
 
         <View style={styles.cards}>
-          {SAMPLE_INSIGHTS.map((s, i) => (
+          {INSIGHTS.map((s, i) => (
             <InsightCard
               key={i}
               kind={s.kind}
@@ -83,8 +60,8 @@ const styles = StyleSheet.create({
   scroll: { padding: spacing.xl, paddingBottom: 80 },
   header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginBottom: spacing.xl },
   menuBtn: {
-    width: 40,
-    height: 40,
+    width: 48,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,

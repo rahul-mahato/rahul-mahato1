@@ -93,12 +93,14 @@ const styles = StyleSheet.create({
   },
   actions: { flexDirection: 'row', gap: spacing.sm, justifyContent: 'flex-end' },
   btnGhost: {
-    paddingVertical: 12,
+    minHeight: 48,
+    justifyContent: 'center',
     paddingHorizontal: 16,
     borderRadius: radius.md,
   },
   btnDanger: {
-    paddingVertical: 12,
+    minHeight: 48,
+    justifyContent: 'center',
     paddingHorizontal: 16,
     borderRadius: radius.md,
     borderWidth: 1,
@@ -106,7 +108,8 @@ const styles = StyleSheet.create({
   },
   btnDangerText: { color: colors.danger },
   btnPrimary: {
-    paddingVertical: 12,
+    minHeight: 48,
+    justifyContent: 'center',
     paddingHorizontal: 22,
     borderRadius: radius.md,
     backgroundColor: colors.ink,
