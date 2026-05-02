@@ -1,7 +1,7 @@
 # CLAUDE.md — MemoryOS Agent Brief
 
 > Read this first. This file is the contract between you (an AI agent) and this codebase.
-> Skim §1–§3 every session. Re-read §4 (invariants) before touching schema, crypto, or sync.
+> Skim §1–§3 every session. Re-read §4 (invariants) before touching schema, crypto, or the audit log.
 
 ## 1. What this project is
 
@@ -24,7 +24,11 @@ Everything semantic happens on-device. The server (if any) only ever sees cipher
 | LLM              | ONNX — Phi-3.5-mini / Gemma-2B (local)        | `src/ai/inference.ts`|
 | Voice            | Whisper-tiny (on-device)                      | `src/ai/whisper.ts`  |
 | Crypto           | AES-256-GCM via Keychain/Keystore             | `src/crypto/`        |
-| Sync             | E2EE CRDT (optional, opt-in)                  | `src/sync/`          |
+| Audit log        | Privacy log (every outbound call recorded)    | `src/audit/`         |
+
+**Single-device by design.** There is no multi-device sync, no relay, no
+CRDT engine. The app is offline-first; if you find yourself reaching for
+sync code, push back — it's out of scope.
 
 ## 3. Repository map
 
@@ -45,7 +49,7 @@ src/
   vector/             # LanceDB adapter + embedder pipeline
   ai/                 # Inference, RAG, synthesis, whisper, prompts
   crypto/             # AES-GCM + hardware key management
-  sync/               # CRDT + privacy audit log
+  audit/              # Privacy audit log (every outbound call)
   settings/           # TTL store + sweeper (settings drive deletes)
   hooks/              # useMemories, useAskPastSelf, useUpdateMemory
   utils/              # logger, ids
@@ -59,8 +63,9 @@ tests/                # jest tests, mirrors src/
 These are the rails. Breaking any of them is a P0 bug.
 
 1. **No raw user content leaves the device.** Not in logs, not in telemetry, not in
-   error reports, not in sync payloads. Sync is E2EE-only — encryption happens *before*
-   it crosses the JS↔native bridge boundary.
+   error reports, not in any future network call. The app is single-device — if you
+   need to add a network boundary at all, it must be encrypted before it leaves
+   the JS↔native bridge.
 2. **All persisted memory rows are encrypted at rest.** Plaintext exists only in
    memory while a Memory model is hydrated. See `src/crypto/encryption.ts`.
 3. **The vector index is derived state.** Memories are the source of truth. A wipe-and-
@@ -72,7 +77,8 @@ These are the rails. Breaking any of them is a P0 bug.
 6. **Schema migrations are append-only.** Never edit a past migration; add a new one.
    See `src/db/schema.ts`.
 7. **The privacy audit log records every outbound network request.** If you add a
-   `fetch` or websocket, you must log it via `src/sync/privacyLog.ts`.
+   `fetch` or websocket, you must log it via `src/audit/privacyLog.ts`. Today's
+   expected count is zero — anything else needs a clear justification.
 8. **TTL deletions are real.** When the user sets a memory TTL, the sweeper
    actually removes rows + their vectors. No soft-delete, no "archived"
    bucket — the user asked for forgetting, so forget. Sweep runs on app

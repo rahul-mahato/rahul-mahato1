@@ -1,6 +1,6 @@
 ---
 name: change-settings
-description: Use when adding or changing a user-facing preference (TTL, telemetry opt-in, theme, sync toggle). Settings are *not* user content — they live in AsyncStorage, but anything they drive (deletes, network calls, key rotation) must still respect the privacy and crypto rules. Don't use for schema changes (use update-schema).
+description: Use when adding or changing a user-facing preference (TTL, telemetry opt-in, theme). Settings are *not* user content — they live in AsyncStorage, but anything they drive (deletes, model swaps, audit-logged calls) must still respect the privacy and crypto rules. Don't use for schema changes (use update-schema).
 ---
 
 # Adding or changing a setting

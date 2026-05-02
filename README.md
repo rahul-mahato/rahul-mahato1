@@ -42,7 +42,7 @@ src/
   vector/             LanceDB adapter + embedding queue
   ai/                 embedder, inference, whisper, RAG, prompts
   crypto/             AES-256-GCM + Keychain/Keystore DEK
-  sync/               privacy audit log, CRDT (Phase 3)
+  audit/              privacy audit log
   settings/           TTL preference + sweeper
   hooks/              useMemories, useAskPastSelf, useUpdateMemory
 docs/

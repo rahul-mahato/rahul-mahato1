@@ -24,22 +24,15 @@ data. Code that contradicts this document is wrong.
 
 > **Open issue:** if a user types a sensitive theme into a memory and the
 > synthesis engine extracts it as a label, the label sits unencrypted. We
-> resolve this in Phase 3 by encrypting `themes.label` once we have stable
-> theme IDs that don't depend on plaintext lookup.
+> resolve this when synthesis lands by encrypting `themes.label` once we
+> have stable theme IDs that don't depend on plaintext lookup.
 
 ## Data in transit
 
-Phase 1: **none**. The app is offline by default.
-
-Phase 3 (sync): every CRDT op is encrypted with the user's DEK before it
-leaves the device. The relay sees:
-- `id` (random)
-- `ts` (timestamp)
-- `ciphertext`
-- `iv`
-
-It does **not** see: text, embeddings, theme labels, kind, or any user-stable
-identifier beyond what the user opts into.
+**None.** The app is single-device and offline. There is no sync, no
+relay, no cloud account, no telemetry by default. If a future feature
+needs a network call, it must be encrypted with the user's DEK before it
+crosses the JS↔native bridge and recorded in the audit log.
 
 ## Outbound calls
 

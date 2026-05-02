@@ -5,7 +5,7 @@
 ## Goals
 
 - **Local-first.** All semantic processing on-device.
-- **Zero-knowledge.** Server (when present) only sees ciphertext.
+- **Single-device.** No sync, no relay, no cloud account. The app is offline by default.
 - **Low-friction ingest.** Chat-native, voice-native, image-native.
 - **Proactive recall.** Synthesis surfaces themes; not a passive archive.
 
@@ -78,9 +78,13 @@ Models are downloaded into `models/` on first launch (gitignored).
 The native AES-GCM binding is wired in `crypto/native.ts` (added with the
 encryption PR). Until then the stub throws to fail loud.
 
-### Sync (`src/sync/`)
-- `privacyLog.ts` — every outbound call is recorded here.
-- `crdt.ts` — E2EE CRDT sync (Phase 3, stubbed).
+### Audit (`src/audit/`)
+- `privacyLog.ts` — every outbound call is recorded here. The settings UI
+  surfaces it verbatim. Today's expected count is zero.
+
+> The app is **single-device by design**. There is no sync engine, no
+> CRDT, no relay. If you find yourself adding network code, log it via
+> `audit/privacyLog.ts` and justify it in the PR.
 
 ## Critical flows
 
@@ -109,14 +113,6 @@ useAskPastSelf.ask(q)
   → returned to UI with sources
 ```
 
-### Sync (Phase 3)
-```
-local op
-  → encrypt(op, DEK) → SyncOp { ciphertext, iv }
-  → relay (untrusted, sees only ciphertext)
-  → other device pulls → decrypt → CRDT apply
-```
-
 ## Performance budgets
 
 Total wall-clock for a query (embed + search + synthesize) must stay <3s on a
@@ -128,7 +124,14 @@ mid-tier device. Per-pipeline budgets in
 - Native AES-GCM binding (stub throws)
 - ONNX-based real LLM (stub returns canned text)
 - LanceDB native build (in-memory map for now)
-- CRDT sync engine (stub throws)
 - OCR for image ingestion
 
 These are tracked in `docs/ROADMAP.md`.
+
+## What's intentionally NOT planned
+
+- **Multi-device sync.** Not in scope. The app is single-device. We don't
+  have a CRDT, a relay, or a cloud account flow, and we're not adding
+  one. If a user wants their memories on a new phone, that's a future
+  manual export/import question — not a sync question.
+- **Cloud LLM fallback.** Same reason as above plus the privacy promise.

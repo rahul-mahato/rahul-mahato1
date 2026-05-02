@@ -45,21 +45,24 @@ back. No AI yet beyond stub embeddings.
 
 ## Phase 3 — Proactivity (Weeks 9–12)
 
-**Goal:** Synthesis surfaces patterns. Multi-device E2EE sync.
+**Goal:** Synthesis surfaces patterns. The Insights screen earns its name.
 
 - [ ] Weekly synthesis worker → `themes` + `memory_themes`
-- [ ] Insights screen pulls from synthesis output
-- [ ] CRDT engine + relay protocol
-- [ ] DEK rotation flow
+- [ ] Insights screen pulls from synthesis output (replace fixture)
+- [ ] Theme-label encryption once stable theme IDs land
 - [ ] Public beta launch
 
 **Acceptance:**
-- Two devices reconcile a 500-op divergence in under 5s.
 - Synthesis identifies a planted recurring theme across a 30-day fixture.
+- Insights screen reflects last Sunday's run, not stale data.
 
-## Out of scope (forever, for now)
+## Out of scope
 
-- Cloud LLM fallback
-- Server-side search
-- Third-party analytics
-- Web/desktop builds before mobile parity
+- **Multi-device sync.** Removed from scope deliberately. The app is
+  single-device. No CRDT, no relay, no cloud account. Memories live on
+  one phone; if they need to move, that's a manual export/import
+  question for a much later phase.
+- Cloud LLM fallback.
+- Server-side search.
+- Third-party analytics.
+- Web/desktop builds before mobile parity.

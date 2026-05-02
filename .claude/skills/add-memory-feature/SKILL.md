@@ -1,6 +1,6 @@
 ---
 name: add-memory-feature
-description: Use when adding a user-facing feature that creates, reads, or transforms Memory entries — chat composer changes, new query modes, timeline interactions, insights cards. Don't use for schema changes (use update-schema) or pure crypto/sync changes (use privacy-audit).
+description: Use when adding a user-facing feature that creates, reads, or transforms Memory entries — chat composer changes, new query modes, timeline interactions, insights cards. Don't use for schema changes (use update-schema) or pure crypto / audit-log changes (use privacy-audit).
 ---
 
 # Adding a Memory feature

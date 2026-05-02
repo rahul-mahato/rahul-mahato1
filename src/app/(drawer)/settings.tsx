@@ -7,7 +7,7 @@ import { Text } from '@/theme/text';
 import { colors, fonts, radius, spacing } from '@/theme/tokens';
 import { TTL_OPTIONS, type TtlId, getTtl, setTtl } from '@/settings/ttl';
 import { runTtlSweep } from '@/settings/sweeper';
-import { privacyLog } from '@/sync/privacyLog';
+import { privacyLog } from '@/audit/privacyLog';
 import type { PrivacyLogEntry } from '@db/index';
 
 export default function SettingsScreen() {

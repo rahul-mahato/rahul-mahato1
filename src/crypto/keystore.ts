@@ -33,12 +33,6 @@ export async function getDek(): Promise<Uint8Array> {
   return cachedDek;
 }
 
-export async function rotateDek(): Promise<void> {
-  // PERF: rotation requires re-encrypting every memory; schedule via worker.
-  // STUB: full rotation flow lands with sync (Phase 3).
-  throw new Error('DEK rotation not yet implemented — see roadmap Phase 3');
-}
-
 export async function wipe(): Promise<void> {
   await SecureStore.deleteItemAsync(DEK_KEY);
   cachedDek = null;

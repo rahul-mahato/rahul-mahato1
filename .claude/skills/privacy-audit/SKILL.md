@@ -1,6 +1,6 @@
 ---
 name: privacy-audit
-description: Use whenever a change touches src/crypto/, src/sync/, adds a network call, adds telemetry/analytics, or imports a third-party SDK. The default in this codebase is "no data leaves the device" — every exception needs justification, audit-logging, and user-visible disclosure.
+description: Use whenever a change touches src/crypto/, src/audit/, adds a network call, adds telemetry/analytics, or imports a third-party SDK. The default in this codebase is "no data leaves the device" — the app is single-device, so any new outbound call needs strong justification, audit-logging, and user-visible disclosure.
 ---
 
 # Privacy audit checklist

@@ -1,6 +1,6 @@
 ---
 name: memoryos-architecture
-description: Use when the agent needs to orient on MemoryOS — request flow, module boundaries, where features live, what's allowed where. Invoke at session start for non-trivial work, or whenever a task spans more than one of {db, vector, ai, crypto, sync}.
+description: Use when the agent needs to orient on MemoryOS — request flow, module boundaries, where features live, what's allowed where. Invoke at session start for non-trivial work, or whenever a task spans more than one of {db, vector, ai, crypto, audit}.
 ---
 
 # MemoryOS Architecture Tour
@@ -38,7 +38,7 @@ treating it like a normal cloud-backed RN app. It isn't.
 | `src/vector/`   | Embedding + LanceDB upsert/search     | Persist plaintext                     |
 | `src/ai/`       | Inference (embed, LLM, ASR), RAG glue | Make network calls                    |
 | `src/crypto/`   | AES-GCM encrypt/decrypt, key mgmt     | Be bypassed by anyone else            |
-| `src/sync/`     | CRDT + privacy audit log              | Send anything before encrypt          |
+| `src/audit/`    | Privacy audit log                     | Quote payloads — only describe shape  |
 
 ## Request flows you'll see in PRs
 
@@ -62,4 +62,6 @@ emit `memory.created` → background worker embeds → LanceDB upsert.
 
 Search `CLAUDE.md` §4 (invariants) before changing anything in `db/`, `crypto/`, or
 `sync/`. If you're about to add a network call anywhere, log it via
-`src/sync/privacyLog.ts` or your PR will fail privacy review.
+`src/audit/privacyLog.ts` or your PR will fail privacy review. Note: the
+app is single-device by design — `fetch` calls are a red flag, not a
+default.
