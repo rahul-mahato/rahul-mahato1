@@ -1,0 +1,41 @@
+node_modules/
+.expo/
+dist/
+web-build/
+*.log
+.DS_Store
+
+# Native
+ios/Pods/
+ios/build/
+android/.gradle/
+android/build/
+android/app/build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# Test artifacts
+coverage/
+
+# Local databases / model weights (never commit user data or model binaries)
+*.sqlite
+*.db
+*.lance
+models/*.onnx
+models/*.bin
+
+# Claude local settings (per-user)
+.claude/settings.local.json

@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "MemoryOS",
+    "slug": "memoryos",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "memoryos",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.memoryos.app",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "MemoryOS uses on-device speech recognition to capture voice notes. Audio never leaves your device.",
+        "NSCameraUsageDescription": "Used to extract text from images via on-device OCR. Images never leave your device."
+      }
+    },
+    "android": {
+      "package": "com.memoryos.app",
+      "permissions": ["RECORD_AUDIO", "CAMERA"]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
